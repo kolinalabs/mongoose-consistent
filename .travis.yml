@@ -5,4 +5,4 @@ node_js:
   - "9"
 services:
   - "mongodb"
-script: "npm test"
+script: "npm run test-travis"

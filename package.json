@@ -5,7 +5,8 @@
   "homepage": "https://github.com/kolinalabs/mongoose-consistent",
   "main": "src/index.js",
   "scripts": {
-    "test": "nodemon --exec 'mocha -R min'"
+    "test": "nodemon --exec 'mocha -R min'",
+    "test-travis": "mocha ./test/*.js"
   },
   "author": "Claudinei Machado <cjchamado@gmail.com>",
   "license": "Apache 2.0",

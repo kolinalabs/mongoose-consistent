@@ -3,9 +3,11 @@ const plugin = require('../src')
 
 require('dotenv').config()
 
+const dsn = process.env.MONGODB || 'mongodb://localhost:27017/mongoose_consistent'
+
 mongoose.Promise = global.Promise
 
-mongoose.connect('mongodb://localhost:27017/mongoose_consistent', {
+mongoose.connect(dsn, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
@@ -18,6 +20,10 @@ mongoose.connection
 
 mongoose.plugin(plugin, {
     // actionDefault: 'restrict'
+})
+
+after((done) => {
+    mongoose.disconnect(done)
 })
 
 const {

@@ -102,6 +102,17 @@ const ProductSchema = new mongoose.Schema({
 
 > When using the action type **cascade** in such a configuration, the entire document is removed.
 
+> When using the action type **set_null** in such a configuration, the ObjectId removed from array.
+
+
+# Configuration and behavior matrix
+
+| Association | restrict | cascade | set_null |
+|---	|---	|---	|---	|
+| ref (ObjectId) | Error | document is removed | field is null |
+| refPath | Error | document is removed | field is null |
+| array of ObjectId | Error | document is removed | array item is removed |
+
 # Running tests
 
 - Copy '.env.example' file to '.env'

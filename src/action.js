@@ -31,7 +31,15 @@ class SetNullAction extends Action {
 
     async apply({ model, conditions, property, next }) {
         try {
-            await model.updateMany(conditions, { $set: { [property]: null } })
+            const pathType = model.schema.paths[property].constructor.name
+            switch (pathType) {
+                case 'ObjectId':
+                    await model.updateMany(conditions, { $set: { [property]: null } })
+                    break
+                case 'SchemaArray':
+                    await model.updateMany(conditions, { $pull: conditions })
+                    break
+            }
         } catch (e) {
             next(e)
         }

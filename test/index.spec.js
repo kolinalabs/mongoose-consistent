@@ -296,7 +296,6 @@ describe('with array of ObjectId(s)', () => {
                 assert.equal(product.tags.length, 1)
                 assert.equal(product.tags[0], tag._id)
 
-                // let errorMessage = null
                 tag.delete().then(() => {
                 })
                 .catch((error) => {
@@ -305,6 +304,45 @@ describe('with array of ObjectId(s)', () => {
                         assert.isNull(tag)
                         Product.findById(product._id).then((product) => {
                             assert.isNull(product)
+                            done()
+                        })
+                    })
+                })
+            })
+        })
+    })
+
+    it('actionType: set_null', (done) => {
+        Product.schema.paths.tags.options.type[0].onDelete = 'set_null'
+        /**
+         * Tag(s) >> Product
+         * 1. Create tags
+         * 2. Create product with tags
+         * 3. Attempt remove tags
+         * 4. Expect error
+         */
+
+        Tag.create({
+            name: 'my-slugged-tag'
+        }).then((tag) => {
+            assert.isNotNull(tag.createdAt)
+
+            Product.create({
+                name: 'My Product',
+                price: 100,
+                tags: [tag._id]
+            }).then((product) => {
+                assert.equal(product.tags.length, 1)
+                assert.equal(product.tags[0], tag._id)
+
+                tag.delete().then(() => {
+                })
+                .catch((error) => {
+                }).finally(() => {
+                    Tag.findById(tag._id).then((tag) => {
+                        assert.isNull(tag)
+                        Product.findById(product._id).then((product) => {
+                            assert.equal(product.tags.length, 0)
                             done()
                         })
                     })

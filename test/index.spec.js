@@ -27,12 +27,11 @@ describe('remove single parent document', () => {
             Post.create(makePostData(author)).then(() => {
                 let errorMessage = null
                 author.delete().then(() => {
-                    done()
                 }).catch((err) => {
                     errorMessage = err.message
-                    done()
                 }).finally(() => {
                     assert.equal(errorMessage, 'Cannot delete a parent doc: ref constraint fails (Post.author)')
+                    done()
                 })
             })
         })
@@ -102,9 +101,9 @@ describe('remove multiple parent document', () => {
 
                 }).catch((err) => {
                     errorMessage = err.message
-                    done()
                 }).finally(() => {
                     assert.equal(errorMessage, 'Cannot delete a parent doc: ref constraint fails (Post.author)')
+                    done()
                 })
             })
         })

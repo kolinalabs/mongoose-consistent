@@ -1,4 +1,6 @@
-# Mongoose Consistent
+# mongoose-consistent
+
+Foreign reference check across collections with mongoose.
 
 Mongoose allows models from different collections to be related by some type of reference (ref, refPath, array of ObjectIds). However, document deletion operations associated with documentos from another collection, end up affecting the consistency of these relationships.
 
@@ -96,7 +98,6 @@ const ProductSchema = new mongoose.Schema({
 })
 ```
 
-**Note**
 > When using the action type **cascade** in such a configuration, the entire document is removed.
 
 # Running tests

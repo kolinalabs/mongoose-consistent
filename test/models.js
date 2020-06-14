@@ -5,7 +5,7 @@ require('dotenv').config()
 
 mongoose.Promise = global.Promise
 
-mongoose.connect(process.env.MONGODB, {
+mongoose.connect('mongodb://localhost:27017/mongoose_consistent', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })

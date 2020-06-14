@@ -220,7 +220,13 @@ describe('with refPath', () => {
                         done()
                     })
                 })
+            }).catch((error) => {
+                console.error('Invalid promise state on level 2: ', error.message)
+                done()
             })
+        }).catch((error) => {
+            console.error('Invalid promise state on level 1', error.message)
+            done()
         })
     })
 })

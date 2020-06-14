@@ -6,6 +6,18 @@ This library aims to provide mechanisms in an attempt to maintain the relational
 
 # Usage
 
+Install globally or on a specific schema.
+
+```js
+    // globally
+    const mongoose = require('mongoose')
+
+    mongoose.plugin(require('@kolinalabs/mongoose-consistent'))
+
+    // or specific schema
+    MySchema.plugin(require('@kolinalabs/mongoose-consistent'))
+```
+
 **Note**
 > Similar to what happens in relational databases, this configuration must occur in the child schema, corresponding to the weak side of the relationship (ex: 1:N [this side])
 

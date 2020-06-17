@@ -31,9 +31,9 @@ class ReferenceLoader {
                 } else if (pathSchema.options.refPath) {
                     const { refPath } = pathSchema.options
                     const fieldRefPath = modelSchema.paths[refPath]
-                    const enumRefPath = fieldRefPath.options.enum
+                    const enumRefPath = fieldRefPath.options.enum || fieldRefPath.options.enumValues
 
-                    if (enumRefPath.includes(modelName)) {
+                    if (Array.isArray(enumRefPath) && enumRefPath.includes(modelName)) {
                         constraints.push({
                             type: 'refPath',
                             on: schemaName,

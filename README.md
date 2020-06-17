@@ -6,7 +6,7 @@ Foreign reference check across collections with mongoose.
 
 Mongoose allows models from different collections to be related by some type of reference (ref, refPath, array of ObjectIds). However, document deletion operations associated with documentos from another collection, end up affecting the consistency of these relationships.
 
-This library aims to provide mechanisms in an attempt to maintain the relational integrity between documents of different models, using their reference identifiers (_id), as well as types of action (), in order to apply constraints similar to those of relational databases, however application level.
+This library aims to provide mechanisms in an attempt to maintain the relational integrity between documents of different models, using their reference identifiers (_id), as well as types of action (restrict, set_null or cascade), in order to apply constraints similar to those of relational databases, however application level.
 
 # Usage
 
@@ -33,7 +33,7 @@ const PostSchema = new mongoose.Schema({
     author: {
         type: mongoose.Types.ObjectId,
         ref: 'Author',
-        onDelete: 'no_action'    // 'cascade' or 'no_action' (default)
+        onDelete: 'restrict'    // 'cascade' or 'no_action' (default)
     }
 })
 ```

@@ -12,12 +12,16 @@ const checkAndApply = async (modelName, identifiers = [], next, options) => {
     await checker.check(identifiers)
 }
 
-module.exports = (schema, options = {
-    actionDefault: 'no_action'
-}) => {
+module.exports = (schema, options = {}) => {
+    const config = Object.assign({
+        actionDefault: 'no_action'
+    }, options)
+
     schema.pre('remove', async function (next) {
         const { modelName } = this.constructor
-        await checkAndApply(modelName, [this._id], next, options)
+        if (modelName) {
+            await checkAndApply(modelName, [this._id], next, config)
+        }
     })
 
     schema.pre('deleteMany', async function (next) {
@@ -26,7 +30,7 @@ module.exports = (schema, options = {
         const ids = docs.map(doc => doc._id)
 
         if (ids.length > 0) {
-            await checkAndApply(modelName, ids, next, options)
+            await checkAndApply(modelName, ids, next, config)
         }
     })
 }

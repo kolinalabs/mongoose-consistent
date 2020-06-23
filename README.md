@@ -2,7 +2,7 @@
 
 Foreign reference check across collections with mongoose.
 
-[![travis][travis_img]][travis_url] [![npm][npm_img]][npm_url]
+[![travis][travis_img]][travis_url] [![npm][npm_img]][npm_url] [![downloads]][downloads]
 
 Mongoose allows models from different collections to be related by some type of reference (ref, refPath, array of ObjectIds). However, document deletion operations associated with documentos from another collection, end up affecting the consistency of these relationships.
 
@@ -171,3 +171,4 @@ The above example uses the refPath mapping strategy, however two other forms (re
 [travis_url]: https://travis-ci.org/kolinalabs/mongoose-consistent
 [npm_img]: https://img.shields.io/npm/v/@kolinalabs/mongoose-consistent.svg
 [npm_url]: https://npmjs.com/package/@kolinalabs/mongoose-consistent
+[downloads]: https://img.shields.io/npm/dw/@kolinalabs/mongoose-consistent

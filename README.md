@@ -104,6 +104,54 @@ const ProductSchema = new mongoose.Schema({
 
 > When using the action type **set_null** in such a configuration, the ObjectId removed from array.
 
+## Subdocuments (0.1.7+)
+
+According to the mongoose documentation - **Subdocuments are documents embedded in other documents**.
+
+This lib provides functionality so that you can treat references with subdocuments (at any level), just as it does with the common reference between first level documents.
+
+```js
+
+// This will be a product subdocument
+const DataSheetSchema = new mongoose.Schema({
+    power: Number,
+    weight: Number,
+    width: Number,
+    height: Number
+}, { timestamps: true })
+
+const ProductSchema = new mongoose.Schema({
+    name: String,
+    price: Number,
+    // tags: [{
+    //     type: mongoose.Types.ObjectId,
+    //     ref: 'Tag',
+    //     onDelete: 'restrict'
+    // }],
+    datasheet: DataSheetSchema  // << is here
+}, { timestamps: true })
+
+const CommentSchema = new mongoose.Schema({
+    body: String,
+    target: {
+        type: mongoose.Types.ObjectId,
+        required: true,
+        refPath: 'forModel',
+        onDelete: 'restrict'
+    },
+    forModel: {
+        type: String,
+        required: true,
+        enum: [
+            'Post',
+            'Product', // In addition to the standard reference to the parent document
+            'Product.datasheet' // A subdocument can be used as a reference
+        ]
+    }
+})
+```
+
+The above example uses the refPath mapping strategy, however two other forms (ref or array of ObjectIDs) are also supported.
 
 # Configuration and behavior matrix
 

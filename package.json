@@ -6,7 +6,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "nodemon --exec 'mocha -R min'",
-    "test-travis": "mocha ./test/*.js"
+    "test-travis": "mocha ./test/*.spec.js"
   },
   "author": "Claudinei Machado <cjchamado@gmail.com>",
   "license": "Apache 2.0",

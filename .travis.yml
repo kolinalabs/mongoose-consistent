@@ -2,5 +2,7 @@ language: node_js
 node_js:
   - "11"
 services:
-  - "mongodb"
-script: "npm run test-travis"
+  - mongodb
+script:
+  - npm run test:travis
+  - npm run coveralls

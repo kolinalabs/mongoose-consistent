@@ -1,6 +1,10 @@
+const isNested = source => {
+    return (typeof source.parent === 'function') && source.parent()
+}
+
 module.exports = source => {
     const tree = []
-    while(source.parent && source.parent()) {
+    while(isNested(source)) {
         const lastId = source._id
         source = source.parent()
 

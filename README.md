@@ -102,6 +102,10 @@ const ProductSchema = new mongoose.Schema({
 
 > When using the action type **cascade** in such a configuration, the entire document is removed.
 
+> **CHANGED!** The ObjectId removed from array
+
+>> Unlike what happens with a direct property, which is referenced in a unique way to the document, in arrays, several types of identifiers can be associated with the parent document, thus, it becomes relevant to just cancel the corresponding ids, keeping others associated with the document. , without removing it.
+
 > When using the action type **set_null** in such a configuration, the ObjectId removed from array.
 
 ## Subdocuments (0.1.7+)

@@ -3,4 +3,4 @@ node_js:
   - "11"
 services:
   - "mongodb"
-script: "npm run test-travis"
+script: "npm run test"

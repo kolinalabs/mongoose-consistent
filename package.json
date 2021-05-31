@@ -5,8 +5,10 @@
   "homepage": "https://github.com/kolinalabs/mongoose-consistent",
   "main": "src/index.js",
   "scripts": {
-    "test": "nodemon --exec 'mocha -R min'",
-    "test-travis": "mocha ./test/*.spec.js"
+    "test-legacy": "nodemon --exec 'mocha -R min'",
+    "test-v2": "nodemon --exec 'mocha -R min' ./test/v2/*.spec.js",
+    "legacy-test-travis": "mocha ./test/*.spec.js",
+    "test": "jest ./test/v2/*.spec.js"
   },
   "author": "Claudinei Machado <cjchamado@gmail.com>",
   "license": "Apache 2.0",
@@ -21,6 +23,7 @@
     "chai": "^4.2.0",
     "dotenv": "^8.2.0",
     "faker": "^4.1.0",
+    "jest": "^27.0.1",
     "mocha": "^7.2.0",
     "mongoose": "^5.9.18",
     "nodemon": "^2.0.4"
@@ -34,5 +37,8 @@
   },
   "bugs": {
     "url": "https://github.com/kolinalabs/mongoose-consistent/issues"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }

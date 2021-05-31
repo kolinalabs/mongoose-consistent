@@ -2,7 +2,8 @@ class IdentifierExtractor {
     async extract(source) {
         if (
             source.constructor.name === 'model' ||
-            typeof source.parent === 'function' // Array of ObjectIds of Subdocuments
+            // Array of ObjectIds of Subdocuments
+            typeof source.parent === 'function'
         ) {
             return [source._id]
         }

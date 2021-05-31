@@ -4,5 +4,6 @@ node_js:
 services:
   - "mongodb"
 script: "npm run test"
-env:
-  - MONGODB=mongodb://localhost:27017/mongoose_consistent
+branches:
+  only:
+    - v0.2.0@dev

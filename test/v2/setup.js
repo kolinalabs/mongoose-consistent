@@ -2,7 +2,8 @@ require('dotenv').config()
 
 const mongoose = require('mongoose')
 
-mongoose.plugin(require('../../src/plugin'))
+const options = {}
+mongoose.plugin(require('../../src'), options)
 
 const RefConstraintError = require('../../src/RefConstraintError')
 

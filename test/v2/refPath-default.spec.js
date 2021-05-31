@@ -7,7 +7,7 @@ const createItems = async () => {
     const itemA = await ItemA.create({})
     const itemB = await ItemB.create({
         refPathSample: itemA,
-        modelType: 'ItemA'
+        modelType: 'ItemA',
     })
 
     return {

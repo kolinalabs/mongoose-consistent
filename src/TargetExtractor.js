@@ -1,18 +1,28 @@
 class TargetExtractor {
     async extract(source) {
-        const targetRef = source.constructor.modelName
-            ? [source.constructor.modelName]
-            : []
+        const targetRef =
+            source && source.constructor && source.constructor.modelName
+                ? [source.constructor.modelName]
+                : []
 
-        if (source.constructor.name === 'Query') {
+        if (
+            source &&
+            source.constructor &&
+            source.constructor.name === 'Query'
+        ) {
             targetRef.push(source.model.modelName)
         }
 
-        if (typeof source.parent === 'function') {
-            const subPath = await this.detectSubPath(source)
-            const parentPath = await this.extract(source.parent())
+        if (source && typeof source.parent === 'function') {
+            if (source.parent()) {
+                const subPath = await this.detectSubPath(source)
+                targetRef.push(subPath)
+            }
 
-            targetRef.push(...[parentPath, subPath])
+            const parentPath = await this.extract(source.parent())
+            if (parentPath.length > 0) {
+                targetRef.push(parentPath)
+            }
         }
 
         return targetRef.join('.')

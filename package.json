@@ -1,6 +1,6 @@
 {
   "name": "@kolinalabs/mongoose-consistent",
-  "version": "0.1.8",
+  "version": "0.2.1",
   "description": "Foreign reference check across collections with mongoose",
   "homepage": "https://github.com/kolinalabs/mongoose-consistent",
   "main": "src/index.js",

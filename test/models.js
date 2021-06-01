@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 
 const EVENT_KEY = 'onDelete'
-const ACTION = process.env.ACTION || 'restrict'
+// const ACTION = process.env.ACTION || 'restrict'
+const ACTION = undefined
 
 const ItemASchema = new mongoose.Schema({
     name: {

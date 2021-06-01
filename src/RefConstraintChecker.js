@@ -27,7 +27,7 @@ class RefConstraintChecker {
     }
 
     async check(source) {
-        const mapping = Mapping.refresh({ eventKey: this.options.eventKey })
+        const mapping = Mapping.refresh(this.options)
         const identifiers = await this.identifierExtractor.extract(source)
         const target = await this.targetExtractor.extract(source)
 
@@ -75,11 +75,7 @@ class RefConstraintChecker {
                     case NO_ACTION:
                     default:
                         if (typeof config.action === 'function') {
-                            await config.action({
-                                source: source,
-                                reference: config,
-                                next,
-                            })
+                            await config.action(context)
                         }
                         break
                 }

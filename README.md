@@ -1,4 +1,4 @@
-# mongoose-consistent
+# mongoose-consistent  (v2.0+)
 
 Foreign reference check across collections with mongoose.
 
@@ -13,14 +13,23 @@ This library aims to provide mechanisms in an attempt to maintain the relational
 Install globally or on a specific schema.
 
 ```js
-    // globally
     const mongoose = require('mongoose')
 
-    mongoose.plugin(require('@kolinalabs/mongoose-consistent'))
-
-    // or specific schema
-    MySchema.plugin(require('@kolinalabs/mongoose-consistent'))
+    // Recommended global installation only
+    mongoose.plugin(require('@kolinalabs/mongoose-consistent'), {
+        eventKey: 'on_delete',      // onDelete (default)
+        actionDefault: 'set_null',  // restrict (default)
+    })
 ```
+
+# Custom eventKey ('onDelete' for another name)
+
+This option is intended to use another property to define the "onDelete" behavior.
+This can avoid name conflicts with other plugins (example: mongoose-mpath).
+
+# Custom action (restrict/no_action/set_null/cascade)
+
+Use this option to define the default behavior when a constraint violation occurs.
 
 **Note**
 > Similar to what happens in relational databases, this configuration must occur in the child schema, corresponding to the weak side of the relationship (ex: 1:N [this side])
@@ -33,7 +42,7 @@ const PostSchema = new mongoose.Schema({
     author: {
         type: mongoose.Types.ObjectId,
         ref: 'Author',
-        onDelete: 'restrict'    // 'cascade' or 'no_action' (default)
+        onDelete: 'restrict'    // cascade/set_null/no_action
     }
 })
 ```
@@ -100,7 +109,7 @@ const ProductSchema = new mongoose.Schema({
 })
 ```
 
-> When using the action type **cascade** in such a configuration, the entire document is removed.
+> **CHANGED!** When using the action type **cascade** in such a configuration, only the subdocument is removed from array.
 
 > **CHANGED!** The ObjectId removed from array
 
@@ -164,6 +173,7 @@ The above example uses the refPath mapping strategy, however two other forms (re
 | ref (ObjectId) | Error | document is removed | field is null |
 | refPath | Error | document is removed | field is null |
 | array of ObjectId | Error | document is removed | array item is removed |
+| array of Subdocuments | Error | subdocument is removed | property of subdocument is null |
 
 # Running tests
 

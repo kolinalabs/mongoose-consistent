@@ -6,7 +6,7 @@ class Mapping {
         this.pathLoaded = []
     }
 
-    refresh({ eventKey }) {
+    refresh({ eventKey, actionDefault }) {
         for (const modelName in mongoose.models) {
             if (!this.has(modelName)) {
                 const modelSchema = mongoose.modelSchemas[modelName]
@@ -15,6 +15,7 @@ class Mapping {
                     modelName,
                     modelSchema,
                     eventKey,
+                    actionDefault
                 })
 
                 this.mapped.push(modelName)
@@ -24,14 +25,14 @@ class Mapping {
         return this.pathLoaded
     }
 
-    recursivePathLoader({ modelName, modelSchema, parentPath, eventKey }) {
+    recursivePathLoader({ modelName, modelSchema, parentPath, eventKey, actionDefault }) {
         for (const pathSchema of Object.values(modelSchema.paths)) {
             const pathName = !parentPath
                 ? pathSchema.path
                 : `${parentPath}.${pathSchema.path}`
 
             if (pathSchema.options.ref) {
-                const action = pathSchema.options[eventKey] || 'restrict'
+                const action = pathSchema.options[eventKey] || actionDefault
 
                 this.pathLoaded.push({
                     modelName,
@@ -43,7 +44,7 @@ class Mapping {
                 if (pathSchema.options.refPath) {
                     const refPathSchema =
                         modelSchema.paths[pathSchema.options.refPath]
-                    const action = pathSchema.options[eventKey] || 'restrict'
+                    const action = pathSchema.options[eventKey] || actionDefault
 
                     this.pathLoaded.push({
                         modelName,
@@ -69,7 +70,7 @@ class Mapping {
                             const action =
                                 pathSchema.$embeddedSchemaType.options[
                                     eventKey
-                                ] || 'restrict'
+                                ] || actionDefault
 
                             this.pathLoaded.push({
                                 modelName,
@@ -89,6 +90,7 @@ class Mapping {
                             modelSchema: pathSchema.$embeddedSchemaType.schema,
                             parentPath: `${pathSchema.path}.$`,
                             eventKey,
+                            actionDefault
                         })
                     }
                 }

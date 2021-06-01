@@ -181,8 +181,8 @@ The above example uses the refPath mapping strategy, however two other forms (re
 - Configure your mongodb dsn (full)
 - Run 'npm test'
 
-[travis_img]: https://travis-ci.org/kolinalabs/mongoose-consistent.svg?branch=master
-[travis_url]: https://travis-ci.org/kolinalabs/mongoose-consistent
+[travis_img]: https://travis-ci.com/kolinalabs/mongoose-consistent.svg?branch=master
+[travis_url]: https://travis-ci.com/kolinalabs/mongoose-consistent
 [npm_img]: https://img.shields.io/npm/v/@kolinalabs/mongoose-consistent.svg
 [npm_url]: https://npmjs.com/package/@kolinalabs/mongoose-consistent
 [downloads]: https://img.shields.io/npm/dw/@kolinalabs/mongoose-consistent

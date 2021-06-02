@@ -1,4 +1,4 @@
-# mongoose-consistent  (v2.0+)
+# mongoose-consistent  (v2)
 
 Foreign reference check across collections with mongoose.
 

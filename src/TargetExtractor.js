@@ -16,12 +16,12 @@ class TargetExtractor {
         if (source && typeof source.parent === 'function') {
             if (source.parent()) {
                 const subPath = await this.detectSubPath(source)
-                targetRef.push(subPath)
+                targetRef.unshift(subPath)
             }
 
             const parentPath = await this.extract(source.parent())
             if (parentPath.length > 0) {
-                targetRef.push(parentPath)
+                targetRef.unshift(parentPath)
             }
         }
 

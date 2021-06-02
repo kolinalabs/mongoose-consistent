@@ -8,6 +8,8 @@ Mongoose allows models from different collections to be related by some type of 
 
 This library aims to provide mechanisms in an attempt to maintain the relational integrity between documents of different models, using their reference identifiers (_id), as well as types of action (restrict, set_null or cascade), in order to apply constraints similar to those of relational databases, however application level.
 
+## [Check the sample project](https://github.com/kolinalabs/mongoose-consistent-sample)
+
 # Usage
 
 Install globally or on a specific schema.

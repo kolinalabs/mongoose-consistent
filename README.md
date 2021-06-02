@@ -8,32 +8,86 @@ Mongoose allows models from different collections to be related by some type of 
 
 This library aims to provide mechanisms in an attempt to maintain the relational integrity between documents of different models, using their reference identifiers (_id), as well as types of action (restrict, set_null or cascade), in order to apply constraints similar to those of relational databases, however application level.
 
-## [Check the sample project](https://github.com/kolinalabs/mongoose-consistent-sample)
+### [Check the sample project](https://github.com/kolinalabs/mongoose-consistent-sample)
 
 # Usage
 
-Install globally or on a specific schema.
+Recommended global installation only.
+
+> Note: Configure this plugin before loading models.
 
 ```js
     const mongoose = require('mongoose')
 
-    // Recommended global installation only
     mongoose.plugin(require('@kolinalabs/mongoose-consistent'), {
         eventKey: 'on_delete',      // onDelete (default)
         actionDefault: 'set_null',  // restrict (default)
     })
 ```
 
-# Custom eventKey ('onDelete' for another name)
+## Options
 
-This option is intended to use another property to define the "onDelete" behavior.
-This can avoid name conflicts with other plugins (example: mongoose-mpath).
+| Option | default | description |
+|---	|---	|---	|
+| **eventKey** | onDelete | Change the configuration property on the schema |
+| **actionDefault** | restrict | change the default action applied when a referral is found |
 
-# Custom action (restrict/no_action/set_null/cascade)
+## Actions
 
-Use this option to define the default behavior when a constraint violation occurs.
+**restrict**:
+
+An error is thrown when attempting to delete a parent record.
+
+```js
+{
+  onDelete: 'restrict'
+}
+```
+
+**cascade**:
+
+All child records are removed.
+
+```js
+{
+  onDelete: 'cascade'
+}
+```
+
+**set_null**:
+
+Sets the referenced property in the children to ```null```.
+
+```js
+{
+  onDelete: 'set_null'
+}
+```
+
+**no_action**:
+
+Ignore reference check.
+
+```js
+{
+  onDelete: 'no_action'
+}
+```
+
+**callback**:
+
+Use a function to control the behavior of the operation.
+
+```js
+{
+  onDelete(context) {
+      // console.log(context)
+  }
+}
+```
 
 **Note**
+
 > Similar to what happens in relational databases, this configuration must occur in the child schema, corresponding to the weak side of the relationship (ex: 1:N [this side])
 
 ```js
@@ -48,19 +102,6 @@ const PostSchema = new mongoose.Schema({
     }
 })
 ```
-
-## Supported action types
-
-**restrict**: An error is thrown when attempting to delete a parent record related to a child record.
-
-**Note**
-> When using **deleteMany** with actionType **restrict**, if only one of the documents is related to another record, the error is thrown and none of the deletion operations occur.
-
-**cascade**: All child records are removed.
-
-**set_null**: Sets the referenced property in the children to 'null'
-
-**no_action (default)**: Ignore reference check.
 
 ## Supported reference types
 
@@ -119,7 +160,7 @@ const ProductSchema = new mongoose.Schema({
 
 > When using the action type **set_null** in such a configuration, the ObjectId removed from array.
 
-## Subdocuments (0.1.7+)
+## Subdocuments
 
 According to the mongoose documentation - **Subdocuments are documents embedded in other documents**.
 

@@ -6,6 +6,8 @@ const MIDDLEWARES = [
     'deleteMany',
     'findOneAndDelete',
     'findOneAndRemove',
+    'findByIdAndDelete',
+    'findByIdAndRemove'
 ]
 
 module.exports = (schema, options = {}) => {

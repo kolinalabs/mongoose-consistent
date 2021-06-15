@@ -61,6 +61,7 @@ class RefConstraintChecker {
                     conditions,
                     identifiers,
                     targetPath,
+                    countRef
                 }
 
                 switch (config.action) {

@@ -86,6 +86,26 @@ Use a function to control the behavior of the operation.
 }
 ```
 
+```js
+// The 'context' object passed to the callback
+{
+  config: {
+    modelName: 'ItemB',
+    pathName: 'refArrayOfObjectRelated.$.itemA',
+    modelRefs: ['ItemA'],
+    action: 'cascade'
+  },
+  conditions: {
+    'refArrayOfObjectRelated.itemA': {
+      '$in': ['60c8e0c2cc629121ac49db5b']
+    }
+  },
+  identifiers: ['60c8e0c2cc629121ac49db5b'],
+  targetPath: 'refArrayOfObjectRelated.itemA',
+  countRef: 5
+}
+```
+
 **Note**
 
 > Similar to what happens in relational databases, this configuration must occur in the child schema, corresponding to the weak side of the relationship (ex: 1:N [this side])
@@ -221,7 +241,7 @@ The above example uses the refPath mapping strategy, however two other forms (re
 # Running tests
 
 - Copy '.env.example' file to '.env'
-- Configure your mongodb dsn (full)
+- Configure your mongodb dsn (full) and action (restrict/cascade/set_null)
 - Run 'npm test'
 
 [travis_img]: https://travis-ci.com/kolinalabs/mongoose-consistent.svg?branch=master

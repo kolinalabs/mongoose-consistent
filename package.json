@@ -1,6 +1,6 @@
 {
   "name": "@kolinalabs/mongoose-consistent",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Foreign reference check across collections with mongoose",
   "homepage": "https://github.com/kolinalabs/mongoose-consistent",
   "main": "src/index.js",
@@ -12,9 +12,19 @@
   "keywords": [
     "mongoose",
     "mongodb",
-    "foreign-keys",
+    "foreign key",
+    "constraint",
+    "reference",
     "consistency",
-    "constraint"
+    "set_null",
+    "cascade",
+    "restrict",
+    "ref",
+    "refPath",
+    "relations",
+    "ondelete",
+    "integrity",
+    "fk"
   ],
   "devDependencies": {
     "dotenv": "^8.2.0",

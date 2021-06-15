@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
 
 const EVENT_KEY = 'onDelete'
-// const ACTION = process.env.ACTION || 'restrict'
-const ACTION = undefined
+const { ACTION } = process.env
 
 const ItemASchema = new mongoose.Schema({
     name: {
@@ -39,7 +38,7 @@ const SingleNestedSchema = new mongoose.Schema({
 const ItemBSchema = new mongoose.Schema({
     name: {
         type: String,
-        default: 'Side B',
+        default: 'Item B',
     },
     refItemA: {
         type: mongoose.Schema.Types.ObjectId,

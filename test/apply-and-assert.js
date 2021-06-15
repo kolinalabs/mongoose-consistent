@@ -10,6 +10,10 @@ module.exports = async (method, createItems, assertFn) => {
                 await itemA.remove()
                 break
             case 'deleteOne':
+                await ItemA[method]({
+                    _id: itemA._id,
+                })
+                break
             case 'deleteMany':
                 await ItemA[method]({})
                 break

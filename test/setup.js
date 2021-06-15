@@ -2,17 +2,21 @@ require('dotenv').config()
 
 const mongoose = require('mongoose')
 
-const options = {}
+const action = process.env.ACTION
+
+const options = {
+    actionDefault: action
+}
+
 mongoose.plugin(require('../src'), options)
 
 const RefConstraintError = require('../src/RefConstraintError')
 
 const { ItemA, ItemB, ItemC, ItemD } = require('./models')
 
-const action = process.env.ACTION
-
 beforeAll(async () => {
-    await mongoose.connect(process.env.MONGODB, {
+    const uri = `${process.env.MONGODB}_${Math.random().toString().replace('.', '')}`
+    await mongoose.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,

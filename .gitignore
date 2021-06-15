@@ -1,5 +1,5 @@
-/docker
+docker
 node_modules
 package.lock.json
 .env
-docker
+.DS_Store

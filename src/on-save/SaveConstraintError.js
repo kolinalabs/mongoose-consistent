@@ -1,4 +1,4 @@
-const ConstraintError = require('../error/ConstraintError')
+const ConstraintError = require('../ConstraintError')
 
 class SaveConstraintError extends ConstraintError {
     constructor(context) {

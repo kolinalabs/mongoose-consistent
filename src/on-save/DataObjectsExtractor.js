@@ -11,6 +11,7 @@ class DataObjectsExtractor {
             case 'query':
                 switch (source.op) {
                     case 'updateOne':
+                    case 'updateMany':
                         dataObjects.push(...[source._update])
                         break
                     default:

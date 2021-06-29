@@ -14,6 +14,7 @@ const _SAVE = [
     // document
     'save',
     // query
+    'update',
     'updateOne', // and document
     'updateMany',
     'findOneAndUpdate',

@@ -86,7 +86,8 @@ class SaveConstraintChecker {
                                         childCollection:
                                             childModel.collection.name,
                                         parentCollection:
-                                            parentModel.collection.name
+                                            parentModel.collection.name,
+                                        identifier
                                     }
 
                                     throw new InsertOrUpdateError(context)

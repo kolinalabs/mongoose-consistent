@@ -1,6 +1,6 @@
-const ConstraintError = require('./ConstraintError')
+const ConstraintError = require('../error/ConstraintError')
 
-class InsertOrUpdateError extends ConstraintError {
+class SaveConstraintError extends ConstraintError {
     constructor(context) {
         const constraintName =
             `${context.parentModel}.` +
@@ -9,7 +9,7 @@ class InsertOrUpdateError extends ConstraintError {
             `${context.childKey}`
 
         const message =
-            `Cannot add or update a child row:` +
+            `Cannot add or update a child doc:` +
             ` a foreign key constraint fails` +
             ` ('${context.dbName}'.'${context.childCollection}',` +
             ` CONSTRAINT '${constraintName}'` +
@@ -21,4 +21,4 @@ class InsertOrUpdateError extends ConstraintError {
     }
 }
 
-module.exports = InsertOrUpdateError
+module.exports = SaveConstraintError

@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const Mapping = require('../Mapping')
 const OperationSourceType = require('../OperationSourceType')
-const InsertOrUpdateError = require('../error/InsertOrUpdateError')
+const SaveConstraintError = require('./SaveConstraintError')
 const ChildModelResolver = require('./ChildModelResolver')
 const DataObjectsExtractor = require('./DataObjectsExtractor')
 const DataObjectIdentifiersExtractor = require('./DataObjectIdentifiersExtractor')
@@ -87,10 +87,10 @@ class SaveConstraintChecker {
                                             childModel.collection.name,
                                         parentCollection:
                                             parentModel.collection.name,
-                                        identifier
+                                        identifier,
                                     }
 
-                                    throw new InsertOrUpdateError(context)
+                                    throw new SaveConstraintError(context)
                                 }
 
                                 cachedResult[cacheKey] = true

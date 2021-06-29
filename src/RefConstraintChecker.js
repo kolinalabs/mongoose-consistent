@@ -11,6 +11,7 @@ const setNull = require('./action/set-null')
 const restrict = require('./action/restrict')
 const TargetExtractor = require('./TargetExtractor')
 const IdentifierExtractor = require('./IdentifierExtractor')
+const SaveConstraintChecker = require('./on-save/SaveConstraintChecker')
 
 class RefConstraintChecker {
     constructor(options = {}) {
@@ -61,7 +62,7 @@ class RefConstraintChecker {
                     conditions,
                     identifiers,
                     targetPath,
-                    countRef
+                    countRef,
                 }
 
                 switch (config.action) {
@@ -82,6 +83,11 @@ class RefConstraintChecker {
                 }
             }
         }
+    }
+
+    async onSave(source, extra = []) {
+        const saveChecker = new SaveConstraintChecker(this.options)
+        await saveChecker.check(source, extra)
     }
 }
 

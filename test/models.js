@@ -54,7 +54,7 @@ const ItemBSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: 'None',
-        enum: ['Product', 'ItemA', 'None'],
+        enum: ['Product', 'ItemC', 'ItemA', 'None'],
     },
     refArrayOfObjectIds: [
         {

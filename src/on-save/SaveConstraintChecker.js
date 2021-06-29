@@ -36,7 +36,10 @@ class SaveConstraintChecker {
         /** @todo if dataObjects is empty: return */
         // console.log({ dataObjects })
 
-        const childModel = mongoose.model(childModelName)
+        const [rootModelName, ...restModelNAme] = childModelName.split('.')
+
+        const childModel = mongoose.model(rootModelName)
+
         const mapped = mapping.filter((i) => i.modelName === childModelName)
 
         const cachedResult = {}
@@ -76,14 +79,14 @@ class SaveConstraintChecker {
                                 if (!doc) {
                                     const context = {
                                         dbName: mongoose.connection.name,
-                                        childModelName,
+                                        childModel: rootModelName,
                                         parentModel: parentModel.modelName,
-                                        foreignKey: config.pathName,
+                                        childKey: config.pathName,
+                                        parentKey: '_id',
                                         childCollection:
                                             childModel.collection.name,
                                         parentCollection:
-                                            parentModel.collection.name,
-                                        parentKey: '_id',
+                                            parentModel.collection.name
                                     }
 
                                     throw new InsertOrUpdateError(context)

@@ -5,15 +5,15 @@ class InsertOrUpdateError extends ConstraintError {
         const constraintName =
             `${context.parentModel}.` +
             `${context.parentKey}#` +
-            `${context.childModelName}.` +
-            `${context.foreignKey}`
+            `${context.childModel}.` +
+            `${context.childKey}`
 
         const message =
             `Cannot add or update a child row:` +
             ` a foreign key constraint fails` +
             ` ('${context.dbName}'.'${context.childCollection}',` +
             ` CONSTRAINT '${constraintName}'` +
-            ` FOREIGN KEY ('${context.foreignKey}')` +
+            ` FOREIGN KEY ('${context.childKey}')` +
             ` REFERENCES '${context.parentCollection}' ('${context.parentKey}'))`
 
         super(message)

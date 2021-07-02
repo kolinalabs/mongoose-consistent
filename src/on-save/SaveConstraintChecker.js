@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-
 const Mapping = require('../Mapping')
 const OperationSourceType = require('../OperationSourceType')
 const SaveConstraintError = require('./SaveConstraintError')
@@ -33,8 +32,9 @@ class SaveConstraintChecker {
             extra
         )
 
-        /** @todo if dataObjects is empty: return */
-        // console.log({ dataObjects })
+        if (dataObjects.length === 0) {
+            return
+        }
 
         const [rootModelName, ...restModelNAme] = childModelName.split('.')
 

@@ -11,14 +11,11 @@ const _DELETE = [
 ]
 
 const _SAVE = [
-    // document
     'save',
-    // query
     'update',
-    'updateOne', // and document
+    'updateOne',
     'updateMany',
     'findOneAndUpdate',
-    // model
     'insertMany',
 ]
 
@@ -26,7 +23,7 @@ module.exports = (schema, options = {}) => {
     schema.pre(_DELETE, async function (next) {
         const refConstraintChecker = new RefConstraintChecker(options)
         try {
-            await refConstraintChecker.check(this)
+            await refConstraintChecker.onDelete(this)
         } catch (e) {
             return next(e)
         }

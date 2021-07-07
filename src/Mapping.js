@@ -1,4 +1,30 @@
 const mongoose = require('mongoose')
+const ParameterBag = require('./ParameterBag')
+
+const getRefMode = (pathSchema) => {
+    if (pathSchema.options.ref) {
+        return 'ref'
+    } else {
+        if (pathSchema.options.refPath) {
+            return 'refPath'
+        }
+        if (pathSchema.instance === 'Array' && pathSchema.$embeddedSchemaType) {
+            if (
+                pathSchema.$embeddedSchemaType.constructor.name === 'ObjectId'
+            ) {
+                return 'embedded_object_ids'
+            }
+
+            if (
+                pathSchema.$embeddedSchemaType.constructor.name === 'SchemaType'
+            ) {
+                return 'embedded_subschemas'
+            }
+        }
+    }
+
+    return null
+}
 
 class Mapping {
     constructor() {
@@ -6,16 +32,17 @@ class Mapping {
         this.pathLoaded = []
     }
 
-    refresh({ eventKey, actionDefault }) {
+    refresh({ eventKey, actionDefault, saveCheckDefault }) {
         for (const modelName in mongoose.models) {
-            if (!this.has(modelName)) {
+            if (!this.mapped.includes(modelName)) {
                 const modelSchema = mongoose.modelSchemas[modelName]
 
                 this.recursivePathLoader({
                     modelName,
                     modelSchema,
                     eventKey,
-                    actionDefault
+                    actionDefault,
+                    saveCheckDefault,
                 })
 
                 this.mapped.push(modelName)
@@ -25,26 +52,39 @@ class Mapping {
         return this.pathLoaded
     }
 
-    recursivePathLoader({ modelName, modelSchema, parentPath, eventKey, actionDefault }) {
+    recursivePathLoader(config) {
+        const {
+            modelName,
+            modelSchema,
+            parentPath,
+            eventKey,
+            actionDefault,
+            saveCheckDefault,
+        } = config
         for (const pathSchema of Object.values(modelSchema.paths)) {
             const pathName = !parentPath
                 ? pathSchema.path
                 : `${parentPath}.${pathSchema.path}`
 
-            if (pathSchema.options.ref) {
-                const action = pathSchema.options[eventKey] || actionDefault
+            const params = new ParameterBag(pathSchema.options)
 
-                this.pathLoaded.push({
-                    modelName,
-                    pathName,
-                    modelRefs: [pathSchema.options.ref],
-                    action,
-                })
-            } else {
-                if (pathSchema.options.refPath) {
+            const saveCheck = params.getBoolean('saveCheck', saveCheckDefault)
+
+            const refStrategy = getRefMode(pathSchema)
+
+            switch (refStrategy) {
+                case 'ref':
+                    this.pathLoaded.push({
+                        modelName,
+                        pathName,
+                        modelRefs: [pathSchema.options.ref],
+                        action: params.get(eventKey, actionDefault),
+                        saveCheck,
+                    })
+                    break
+                case 'refPath':
                     const refPathSchema =
                         modelSchema.paths[pathSchema.options.refPath]
-                    const action = pathSchema.options[eventKey] || actionDefault
 
                     this.pathLoaded.push({
                         modelName,
@@ -52,54 +92,41 @@ class Mapping {
                         modelRefs: refPathSchema.options.enum,
                         refPath: pathSchema.options.refPath,
                         refPathDefault: refPathSchema.options.default,
-                        action,
+                        action: params.get(eventKey, actionDefault),
+                        saveCheck,
                     })
-                } else if (
-                    pathSchema.instance === 'Array' &&
-                    pathSchema.$embeddedSchemaType
-                ) {
-                    // Array of ObjectId(s)
+                    break
+                case 'embedded_object_ids':
                     if (
-                        pathSchema.$embeddedSchemaType.constructor.name ===
-                        'ObjectId'
+                        pathSchema.$embeddedSchemaType.options &&
+                        pathSchema.$embeddedSchemaType.options.ref
                     ) {
-                        if (
-                            pathSchema.$embeddedSchemaType.options &&
-                            pathSchema.$embeddedSchemaType.options.ref
-                        ) {
-                            const action =
+                        const { ref } = pathSchema.$embeddedSchemaType.options
+                        
+                        this.pathLoaded.push({
+                            modelName,
+                            pathName: `${pathSchema.path}.$`,
+                            modelRefs: [ref],
+                            action:
                                 pathSchema.$embeddedSchemaType.options[
                                     eventKey
-                                ] || actionDefault
-
-                            this.pathLoaded.push({
-                                modelName,
-                                pathName: `${pathSchema.path}.$`,
-                                modelRefs: [
-                                    pathSchema.$embeddedSchemaType.options.ref,
-                                ],
-                                action,
-                            })
-                        }
-                    } else if (
-                        pathSchema.$embeddedSchemaType.constructor.name ===
-                        'SchemaType'
-                    ) {
-                        this.recursivePathLoader({
-                            modelName,
-                            modelSchema: pathSchema.$embeddedSchemaType.schema,
-                            parentPath: `${pathSchema.path}.$`,
-                            eventKey,
-                            actionDefault
+                                ] || actionDefault,
+                            saveCheck,
                         })
                     }
-                }
+                    break
+                case 'embedded_subschemas':
+                    this.recursivePathLoader({
+                        modelName,
+                        modelSchema: pathSchema.$embeddedSchemaType.schema,
+                        parentPath: `${pathSchema.path}.$`,
+                        eventKey,
+                        actionDefault,
+                        saveCheckDefault,
+                    })
+                    break
             }
         }
-    }
-
-    has(modelName) {
-        return this.mapped.includes(modelName)
     }
 }
 

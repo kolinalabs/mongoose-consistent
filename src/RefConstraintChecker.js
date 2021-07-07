@@ -7,6 +7,7 @@ class RefConstraintChecker {
             {
                 eventKey: 'onDelete',
                 actionDefault: 'restrict',
+                saveCheckDefault: true
             },
             options
         )
@@ -18,8 +19,8 @@ class RefConstraintChecker {
     }
 
     async onSave(source, extra = []) {
-        const saveChecker = new SaveConstraintChecker(this.options)
-        await saveChecker.check(source, extra)
+        const checker = new SaveConstraintChecker(this.options)
+        await checker.check(source, extra)
     }
 }
 

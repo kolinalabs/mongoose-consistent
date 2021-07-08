@@ -4,11 +4,15 @@ Foreign reference check across collections with mongoose.
 
 [![travis][travis_img]][travis_url] [![npm][npm_img]][npm_url] [![downloads]][downloads]
 
-Mongoose allows models from different collections to be related by some type of reference (ref, refPath, array of ObjectIds). However, document deletion operations associated with documentos from another collection, end up affecting the consistency of these relationships.
+Mongoose allows models from different collections to be related by some type of reference (ref, refPath, array of ObjectIds). However, document deletion operations associated with documents from another collection, end up affecting the consistency of these relationships.
 
 This library aims to provide mechanisms in an attempt to maintain the relational integrity between documents of different models, using their reference identifiers (_id), as well as types of action (restrict, set_null or cascade), in order to apply constraints similar to those of relational databases, however application level.
 
-### [Check the sample project](https://github.com/kolinalabs/mongoose-consistent-sample)
+---
+
+### [>> CHECK THE SAMPLE PROJECT <<](https://github.com/kolinalabs/mongoose-consistent-sample)
+
+---
 
 ## Supported API methods
 

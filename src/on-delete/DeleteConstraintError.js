@@ -1,4 +1,6 @@
-class RefConstraintError extends Error {
+const ConstraintError = require('../ConstraintError')
+
+class DeleteConstraintError extends ConstraintError {
     constructor(checker) {
         const { modelName, pathName } = checker
         const message = `Cannot delete a parent doc: ref constraint fails (${modelName}.${pathName})`
@@ -7,4 +9,4 @@ class RefConstraintError extends Error {
     }
 }
 
-module.exports = RefConstraintError
+module.exports = DeleteConstraintError

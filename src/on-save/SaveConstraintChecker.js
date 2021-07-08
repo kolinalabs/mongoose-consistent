@@ -68,7 +68,7 @@ class SaveConstraintChecker {
                         const targetPath = modelPath.join('.')
 
                         for (const identifier of identifiers) {
-                            const cacheKey = `${parentModel.modelName}_${identifier}`
+                            const cacheKey = `${parentModel.modelName}_${targetPath}_${identifier}`
 
                             if (!cachedResult.hasOwnProperty(cacheKey)) {
                                 const criteria = {

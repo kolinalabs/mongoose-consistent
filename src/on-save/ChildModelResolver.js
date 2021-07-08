@@ -16,7 +16,7 @@ class ChildModelResolver {
             case 'model':
                 return source.modelName
             case 'query':
-                console.log('Model name query based')
+                console.warn('Model name query based is unsupported')
                 return null
         }
     }

@@ -1,4 +1,4 @@
-# mongoose-consistent  (v2)
+# mongoose-consistent
 
 Foreign reference check across collections with mongoose.
 
@@ -9,6 +9,28 @@ Mongoose allows models from different collections to be related by some type of 
 This library aims to provide mechanisms in an attempt to maintain the relational integrity between documents of different models, using their reference identifiers (_id), as well as types of action (restrict, set_null or cascade), in order to apply constraints similar to those of relational databases, however application level.
 
 ### [Check the sample project](https://github.com/kolinalabs/mongoose-consistent-sample)
+
+## Supported API methods
+
+| Save | Delete |
+|---	| --- |
+| Document.save | Document.delete |
+| Document.update | Model.deleteOne  |
+| Document.updateOne |
+| Model.findByIdAndUpdate | Model.findByIdAndDelete |
+| Model.findOneAndReplace | Model.findByIdAndRemove |
+| Model.findOneAndUpdate | Model.findOneAndDelete |
+| Model.insertMany | Model.findOneAndRemove |
+| Model.replaceOne | Model.delete |
+| Model.update | Model.remove |
+| Model.updateOne | Model.deleteOne |
+| Model.updateMany | Model.deleteMany |
+| Query.findOneAndReplace | Query.deleteOne |
+| Query.findOneAndUpdate | Query.deleteMany |
+| Query.replaceOne | Query.findOneAndDelete |
+| Query.update | Query.findOneAndRemove |
+| Query.updateOne | Query.remove |
+| Query.updateMany |
 
 # Usage
 
@@ -22,6 +44,7 @@ Recommended global installation only.
     mongoose.plugin(require('@kolinalabs/mongoose-consistent'), {
         eventKey: 'on_delete',      // onDelete (default)
         actionDefault: 'set_null',  // restrict (default)
+        saveCheckDefault: false     // true (default)
     })
 ```
 
@@ -31,8 +54,9 @@ Recommended global installation only.
 |---	|---	|---	|
 | **eventKey** | onDelete | Change the configuration property on the schema |
 | **actionDefault** | restrict | change the default action applied when a referral is found |
+| **saveCheckDefault** | true | enable (true), disable (false) or custom (```callback```) saveCheck |
 
-## Actions
+## Actions for delete constraint
 
 **restrict**:
 
@@ -106,128 +130,66 @@ Use a function to control the behavior of the operation.
 }
 ```
 
+## saveCheck for save constraint
+
+**true**:
+
+Active check during document saving.
+
+```js
+{
+  saveCheck: true
+}
+```
+
+**false**:
+
+Inactive check during document saving.
+
+```js
+{
+  saveCheck: false
+}
+```
+
+**callback**:
+
+Use a function to control the behavior of the operation.
+
+```js
+{
+  saveCheck(context) {
+      // console.log(context)
+  }
+}
+```
+
+```js
+// The 'context' object passed to the callback
+
+{
+    config: {
+        modelName: 'ChildModel',
+        pathName: 'parent',
+        modelRefs: ['ParentModel'],
+        action: 'restrict',
+        saveCheck: true,
+    },
+    dbName: 'yourdbname',
+    childModel: 'ChildModel',
+    parentModel: 'ParentModel',
+    childKey: 'parent',
+    parentKey: '_id',
+    childCollection: 'child_collection_name',
+    parentCollection: 'parent_collection_name',
+    identifier: '60e630a00f29040340f556b7',
+}
+
+```
+
 **Note**
 
 > Similar to what happens in relational databases, this configuration must occur in the child schema, corresponding to the weak side of the relationship (ex: 1:N [this side])
-
-```js
-// Author write post
-const PostSchema = new mongoose.Schema({
-    title: String,
-    content: String,
-    author: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Author',
-        onDelete: 'restrict'    // cascade/set_null/no_action
-    }
-})
-```
-
-## Supported reference types
-
-**ref**
-
-```js
-const PostSchema = new mongoose.Schema({
-    title: String,
-    content: String,
-    author: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Author',
-        onDelete: 'restrict'
-    }
-}, { timestamps: true })
-```
-
-**refPath**
-
-```js
-const CommentSchema = new mongoose.Schema({
-    body: String,
-    target: {
-        type: mongoose.Types.ObjectId,
-        required: true,
-        refPath: 'forModel',
-        onDelete: 'set_null'
-    },
-    forModel: {
-        type: String,
-        required: true,
-        enum: ['Post', 'Product']
-    }
-})
-```
-
-**array of ObjectId**
-
-```js
-const ProductSchema = new mongoose.Schema({
-    name: String,
-    price: Number,
-    tags: [{
-        type: mongoose.Types.ObjectId,
-        ref: 'Tag',
-        onDelete: 'cascade'
-    }]
-})
-```
-
-> **CHANGED!** When using the action type **cascade** in such a configuration, only the subdocument is removed from array.
-
-> **CHANGED!** The ObjectId removed from array
-
->> Unlike what happens with a direct property, which is referenced in a unique way to the document, in arrays, several types of identifiers can be associated with the parent document, thus, it becomes relevant to just cancel the corresponding ids, keeping others associated with the document. , without removing it.
-
-> When using the action type **set_null** in such a configuration, the ObjectId removed from array.
-
-## Subdocuments
-
-According to the mongoose documentation - **Subdocuments are documents embedded in other documents**.
-
-This lib provides functionality so that you can treat references with subdocuments (at any level), just as it does with the common reference between first level documents.
-
-```js
-
-// This will be a product subdocument
-const DataSheetSchema = new mongoose.Schema({
-    power: Number,
-    weight: Number,
-    width: Number,
-    height: Number
-}, { timestamps: true })
-
-const ProductSchema = new mongoose.Schema({
-    name: String,
-    price: Number,
-    // tags: [{
-    //     type: mongoose.Types.ObjectId,
-    //     ref: 'Tag',
-    //     onDelete: 'restrict'
-    // }],
-    datasheet: DataSheetSchema  // << is here
-}, { timestamps: true })
-
-const CommentSchema = new mongoose.Schema({
-    body: String,
-    target: {
-        type: mongoose.Types.ObjectId,
-        required: true,
-        refPath: 'forModel',
-        onDelete: 'restrict'
-    },
-    forModel: {
-        type: String,
-        required: true,
-        enum: [
-            'Post',
-            'Product', // In addition to the standard reference to the parent document
-            'Product.datasheet' // A subdocument can be used as a reference
-        ]
-    }
-})
-```
-
-The above example uses the refPath mapping strategy, however two other forms (ref or array of ObjectIDs) are also supported.
 
 # Configuration and behavior matrix
 
@@ -237,12 +199,6 @@ The above example uses the refPath mapping strategy, however two other forms (re
 | refPath | Error | document is removed | field is null |
 | array of ObjectId | Error | document is removed | array item is removed |
 | array of Subdocuments | Error | subdocument is removed | property of subdocument is null |
-
-# Running tests
-
-- Copy '.env.example' file to '.env'
-- Configure your mongodb dsn (full) and action (restrict/cascade/set_null)
-- Run 'npm test'
 
 [travis_img]: https://travis-ci.com/kolinalabs/mongoose-consistent.svg?branch=master
 [travis_url]: https://travis-ci.com/kolinalabs/mongoose-consistent

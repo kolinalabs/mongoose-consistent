@@ -67,8 +67,7 @@ class Mapping {
                 : `${parentPath}.${pathSchema.path}`
 
             const params = new ParameterBag(pathSchema.options)
-
-            const saveCheck = params.getBoolean('saveCheck', saveCheckDefault)
+            const saveCheck = this._resolveSaveCheck(pathSchema.options.saveCheck, saveCheckDefault)
 
             const refStrategy = getRefMode(pathSchema)
 
@@ -102,7 +101,12 @@ class Mapping {
                         pathSchema.$embeddedSchemaType.options.ref
                     ) {
                         const { ref } = pathSchema.$embeddedSchemaType.options
-                        
+
+                        const saveCheck = this._resolveSaveCheck(
+                            pathSchema.$embeddedSchemaType.options.saveCheck,
+                            saveCheckDefault
+                        )
+
                         this.pathLoaded.push({
                             modelName,
                             pathName: `${pathSchema.path}.$`,
@@ -126,6 +130,18 @@ class Mapping {
                     })
                     break
             }
+        }
+    }
+
+    _resolveSaveCheck(saveCheck, saveCheckDefault) {
+        switch (typeof saveCheck) {
+            case 'undefined':
+                return saveCheckDefault
+            case 'boolean':
+            case 'function':
+                return saveCheck
+            default:
+                throw new Error(`Invalid saveCheck type ${typeof saveCheck}`)
         }
     }
 }

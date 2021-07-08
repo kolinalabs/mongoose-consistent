@@ -45,6 +45,10 @@ class SaveConstraintChecker {
         const cachedResult = {}
         for (const dataObject of dataObjects) {
             for (const config of mapped) {
+                if (!config.saveCheck) {
+                    continue
+                }
+
                 const identifiers =
                     await this.dataObjectIdentifiersExtractor.extract(
                         dataObject,
@@ -78,6 +82,7 @@ class SaveConstraintChecker {
 
                                 if (!doc) {
                                     const context = {
+                                        config,
                                         dbName: mongoose.connection.name,
                                         childModel: rootModelName,
                                         parentModel: parentModel.modelName,
@@ -90,7 +95,15 @@ class SaveConstraintChecker {
                                         identifier,
                                     }
 
-                                    throw new SaveConstraintError(context)
+                                    switch (typeof config.saveCheck) {
+                                        case 'boolean':
+                                            throw new SaveConstraintError(
+                                                context
+                                            )
+                                        case 'function':
+                                            await config.saveCheck(context)
+                                            break
+                                    }
                                 }
 
                                 cachedResult[cacheKey] = true

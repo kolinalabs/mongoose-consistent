@@ -16,7 +16,9 @@ const _SAVE = [
     'updateOne',
     'updateMany',
     'findOneAndUpdate',
+    'findOneAndReplace',
     'insertMany',
+    'replaceOne'
 ]
 
 module.exports = (schema, options = {}) => {

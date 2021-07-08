@@ -4,8 +4,6 @@ class DataObjectIdentifiersExtractor {
         if (config.pathName.indexOf('.$') > 0) {
             if (config.pathName.endsWith('.$')) {
                 const [rootField, ...restFields] = config.pathName.split('.$')
-                // console.log(config.pathName, config.modelRefs, source)
-                // console.log(source[rootField])
                 if (Array.isArray(dataObject[rootField])) {
                     identifiers.push(...dataObject[rootField])
                 }
@@ -24,7 +22,6 @@ class DataObjectIdentifiersExtractor {
         } else {
             if (dataObject[config.pathName]) {
                 identifiers.push(dataObject[config.pathName])
-                // console.log(source, source[config.pathName])
             }
         }
 

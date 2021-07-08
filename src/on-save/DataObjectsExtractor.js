@@ -10,12 +10,16 @@ class DataObjectsExtractor {
                 break
             case 'query':
                 switch (source.op) {
+                    case 'update':
                     case 'updateOne':
                     case 'updateMany':
+                    case 'findOneAndUpdate':
+                    case 'findOneAndReplace':
+                    case 'replaceOne':
                         dataObjects.push(...[source._update])
                         break
                     default:
-                        console.log('dataObjects query based', source.op)
+                        console.warn('dataObjects query based', source.op, ' is unsupported')
                         break
                 }
                 break

@@ -14,6 +14,44 @@ This library aims to provide mechanisms in an attempt to maintain the relational
 
 ---
 
+```js
+
+// The parent schema
+const CategorySchema = new mongoose.Schema({
+  name: String,
+  description: String,
+  position: Number,
+})
+
+// The child schema
+const ProductSchema = new mongoose.Schema({
+  name: String,
+  price: Number,
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    /**
+    * set_null: Field is set to null
+    * no_action: Ignores reference check
+    * cascade: This document is removed
+    * restrict: DeleteConstraintError is dispatched
+    * {Function}: Executes a callback function
+    */
+    onDelete: 'restrict',
+    /**
+    * true: Handle reference check (enabled)
+    * false: Ignores reference check (disabled)
+    * {Function}: Executes a callback function
+    */
+    saveCheck(context) {
+      // Do whatever you want
+      // console.log(context)
+    }
+  }
+}
+```
+
+
 ## Supported API methods
 
 | Save | Delete |

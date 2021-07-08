@@ -14,9 +14,10 @@ class DataObjectIdentifiersExtractor {
                 const [rootField, objField, ...restFields] =
                     config.pathName.split('.$.')
                 if (Array.isArray(dataObject[rootField])) {
-                    identifiers.push(
-                        ...dataObject[rootField].map((i) => i[objField])
-                    )
+                    if (Array.isArray(dataObject[rootField])) {
+                        const filterFields = dataObject[rootField].filter(o => o[objField])
+                        identifiers.push(...filterFields.map((i) => i[objField]))
+                    }
                 }
             }
         } else {

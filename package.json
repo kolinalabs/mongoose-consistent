@@ -23,6 +23,7 @@
     "refPath",
     "relations",
     "ondelete",
+    "onsave",
     "integrity",
     "fk"
   ],

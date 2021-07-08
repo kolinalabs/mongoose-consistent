@@ -62,6 +62,12 @@ Recommended global installation only.
 
 An error is thrown when attempting to delete a parent record.
 
+Dispatches DeleteConstraintError instance with a similar error message:
+
+```js
+Cannot delete a parent doc: ref constraint fails (ChildModel.parent_field)
+```
+
 ```js
 {
   onDelete: 'restrict'
@@ -136,6 +142,12 @@ Use a function to control the behavior of the operation.
 
 Active check during document saving.
 
+Dispatches SaveConstraintError instance with a similar error message:
+
+```js
+Cannot add or update a child doc: a foreign key constraint fails ('dbname'.'child_collection', CONSTRAINT 'ParentModel._id#ChildModel.parent_field' FOREIGN KEY ('parent_field') REFERENCES 'parent_collection' ('_id'))
+```
+
 ```js
 {
   saveCheck: true
@@ -191,7 +203,7 @@ Use a function to control the behavior of the operation.
 
 > Similar to what happens in relational databases, this configuration must occur in the child schema, corresponding to the weak side of the relationship (ex: 1:N [this side])
 
-# Configuration and behavior matrix
+# Configuration behavior for delete actions
 
 | Association | restrict | cascade | set_null |
 |---	|---	|---	|---	|
